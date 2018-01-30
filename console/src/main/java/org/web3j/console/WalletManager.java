@@ -1,12 +1,13 @@
 package org.web3j.console;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 import static org.web3j.codegen.Console.exitError;
 
@@ -90,6 +91,8 @@ abstract class WalletManager {
                 console.printf("Invalid password specified\n");
             } catch (IOException e) {
                 exitError("Unable to load wallet file: " + walletFile + "\n" + e.getMessage());
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -1,5 +1,12 @@
 package org.web3j.crypto;
 
+import com.lambdaworks.crypto.SCrypt;
+
+import org.spongycastle.crypto.digests.SHA256Digest;
+import org.spongycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.spongycastle.crypto.params.KeyParameter;
+import org.web3j.utils.Numeric;
+
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
@@ -7,19 +14,13 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.UUID;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.spongycastle.crypto.digests.SHA256Digest;
-import org.spongycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.spongycastle.crypto.generators.SCrypt;
-import org.spongycastle.crypto.params.KeyParameter;
-
-import org.web3j.utils.Numeric;
 
 import static org.web3j.crypto.SecureRandomUtils.secureRandom;
 
@@ -29,7 +30,7 @@ import static org.web3j.crypto.SecureRandomUtils.secureRandom;
  * Web3 Secret Storage Definition</a> or the
  * <a href="https://github.com/ethereum/go-ethereum/blob/master/accounts/key_store_passphrase.go">
  * Go Ethereum client implementation</a>.</p>
- *
+ * <p>
  * <p><strong>Note:</strong> we don't use the Bouncy Castle Scrypt implementation
  * {@link org.spongycastle.crypto.generators.SCrypt}, as the following parameter assertion results
  * in failure of the Ethereum reference
@@ -38,7 +39,7 @@ import static org.web3j.crypto.SecureRandomUtils.secureRandom;
  * Ethereum reference
  * <a href="https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition#scrypt">
  * Scrypt test vector</a>:</p>
- *
+ * <p>
  * <pre>
  * {@code
  * // Only value of r that cost (as an int) could be exceeded for is 1
@@ -67,7 +68,7 @@ public class Wallet {
     static final String SCRYPT = "scrypt";
 
     public static WalletFile create(String password, ECKeyPair ecKeyPair, int n, int p)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
 
         byte[] salt = generateRandomBytes(32);
 
@@ -81,7 +82,7 @@ public class Wallet {
                 Numeric.toBytesPadded(ecKeyPair.getPrivateKey(), Keys.PRIVATE_KEY_SIZE);
 
         byte[] cipherText = performCipherOperation(
-                    Cipher.ENCRYPT_MODE, iv, encryptKey, privateKeyBytes);
+                Cipher.ENCRYPT_MODE, iv, encryptKey, privateKeyBytes);
 
         byte[] mac = generateMac(derivedKey, cipherText);
 
@@ -89,12 +90,12 @@ public class Wallet {
     }
 
     public static WalletFile createStandard(String password, ECKeyPair ecKeyPair)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
         return create(password, ecKeyPair, N_STANDARD, P_STANDARD);
     }
 
     public static WalletFile createLight(String password, ECKeyPair ecKeyPair)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
         return create(password, ecKeyPair, N_LIGHT, P_LIGHT);
     }
 
@@ -132,8 +133,8 @@ public class Wallet {
     }
 
     private static byte[] generateDerivedScryptKey(
-            byte[] password, byte[] salt, int n, int r, int p, int dkLen) throws CipherException {
-        return SCrypt.generate(password, salt, n, r, p, dkLen);
+            byte[] password, byte[] salt, int n, int r, int p, int dkLen) throws GeneralSecurityException {
+        return SCrypt.scrypt(password, salt, n, r, p, dkLen);
     }
 
     private static byte[] generateAes128CtrDerivedKey(
@@ -161,17 +162,12 @@ public class Wallet {
             SecretKeySpec secretKeySpec = new SecretKeySpec(encryptKey, "AES");
             cipher.init(mode, secretKeySpec, ivParameterSpec);
             return cipher.doFinal(text);
-        } catch (NoSuchPaddingException e) {
-            return throwCipherException(e);
-        } catch (NoSuchAlgorithmException e) {
-            return throwCipherException(e);
-        } catch (InvalidAlgorithmParameterException e) {
-            return throwCipherException(e);
-        } catch (InvalidKeyException e) {
-            return throwCipherException(e);
-        } catch (BadPaddingException e) {
-            return throwCipherException(e);
-        } catch (IllegalBlockSizeException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidAlgorithmParameterException
+                | InvalidKeyException
+                | BadPaddingException
+                | IllegalBlockSizeException e) {
             return throwCipherException(e);
         }
     }
@@ -190,7 +186,7 @@ public class Wallet {
     }
 
     public static ECKeyPair decrypt(String password, WalletFile walletFile)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
 
         validate(walletFile);
 

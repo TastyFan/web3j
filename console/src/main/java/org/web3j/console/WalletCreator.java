@@ -1,14 +1,12 @@
 package org.web3j.console;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-
 import org.web3j.codegen.Console;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.WalletUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * Simple class for creating a wallet file.
@@ -39,15 +37,7 @@ public class WalletCreator extends WalletManager {
             String walletFileName = WalletUtils.generateFullNewWalletFile(password, destination);
             console.printf("Wallet file " + walletFileName
                     + " successfully created in: " + destinationDir + "\n");
-        } catch (CipherException e) {
-            Console.exitError(e);
-        } catch (IOException e) {
-            Console.exitError(e);
-        } catch (InvalidAlgorithmParameterException e) {
-            Console.exitError(e);
-        } catch (NoSuchAlgorithmException e) {
-            Console.exitError(e);
-        } catch (NoSuchProviderException e) {
+        } catch (CipherException | GeneralSecurityException | IOException e) {
             Console.exitError(e);
         }
     }

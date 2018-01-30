@@ -1,11 +1,12 @@
 package org.web3j.console;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import static org.web3j.codegen.Console.exitError;
 
@@ -49,9 +50,7 @@ public class WalletUpdater extends WalletManager {
                     newPassword, credentials.getEcKeyPair(), destination, true);
             console.printf("New wallet file " + walletFileName
                     + " successfully created in: " + destinationDir + "\n");
-        } catch (CipherException e) {
-            exitError(e);
-        } catch (IOException e) {
+        } catch (CipherException | GeneralSecurityException | IOException e) {
             exitError(e);
         }
 

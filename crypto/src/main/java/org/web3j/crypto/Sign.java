@@ -1,23 +1,18 @@
 package org.web3j.crypto;
 
-import java.math.BigInteger;
-import java.security.SignatureException;
-import java.util.Arrays;
-
 import org.spongycastle.asn1.x9.X9ECParameters;
 import org.spongycastle.asn1.x9.X9IntegerConverter;
-import org.spongycastle.crypto.digests.SHA256Digest;
 import org.spongycastle.crypto.ec.CustomNamedCurves;
 import org.spongycastle.crypto.params.ECDomainParameters;
-import org.spongycastle.crypto.params.ECPrivateKeyParameters;
-import org.spongycastle.crypto.signers.ECDSASigner;
-import org.spongycastle.crypto.signers.HMacDSAKCalculator;
 import org.spongycastle.math.ec.ECAlgorithms;
 import org.spongycastle.math.ec.ECPoint;
 import org.spongycastle.math.ec.FixedPointCombMultiplier;
 import org.spongycastle.math.ec.custom.sec.SecP256K1Curve;
-
 import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
+import java.security.SignatureException;
+import java.util.Arrays;
 
 import static org.web3j.utils.Assertions.verifyPrecondition;
 
@@ -99,7 +94,7 @@ public class Sign {
         BigInteger i = BigInteger.valueOf((long) recId / 2);
         BigInteger x = sig.r.add(i.multiply(n));
         //   1.2. Convert the integer x to an octet string X of length mlen using the conversion
-        //        routine specified in Section 2.3.7, where mlen = ⌈(log2 p)/8⌉ or mlen = ⌈m/8⌉.
+        //        routine specified in Section 2.3.7, where mlen = '(log2 p)/8' or mlen = 'm/8'.
         //   1.3. Convert the octet string (16 set binary digits)||X to an elliptic curve point R
         //        using the conversion routine specified in Section 2.3.4. If this conversion
         //        routine outputs "invalid", then do another iteration of Step 1.

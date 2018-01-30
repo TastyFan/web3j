@@ -1,18 +1,16 @@
 package org.web3j.crypto;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.web3j.utils.Numeric;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.web3j.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
 import static org.web3j.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
@@ -30,23 +28,22 @@ public class WalletUtils {
     }
 
     public static String generateFullNewWalletFile(String password, File destinationDirectory)
-            throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CipherException, IOException {
+            throws GeneralSecurityException,
+            CipherException, IOException {
 
         return generateNewWalletFile(password, destinationDirectory, true);
     }
 
     public static String generateLightNewWalletFile(String password, File destinationDirectory)
-            throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CipherException, IOException {
+            throws GeneralSecurityException,
+            CipherException, IOException {
 
         return generateNewWalletFile(password, destinationDirectory, false);
     }
 
     public static String generateNewWalletFile(
             String password, File destinationDirectory, boolean useFullScrypt)
-            throws CipherException, IOException, InvalidAlgorithmParameterException,
-            NoSuchAlgorithmException, NoSuchProviderException {
+            throws CipherException, IOException, GeneralSecurityException {
 
         ECKeyPair ecKeyPair = Keys.createEcKeyPair();
         return generateWalletFile(password, ecKeyPair, destinationDirectory, useFullScrypt);
@@ -54,7 +51,7 @@ public class WalletUtils {
 
     public static String generateWalletFile(
             String password, ECKeyPair ecKeyPair, File destinationDirectory, boolean useFullScrypt)
-            throws CipherException, IOException {
+            throws CipherException, IOException, GeneralSecurityException {
 
         WalletFile walletFile;
         if (useFullScrypt) {
@@ -72,12 +69,12 @@ public class WalletUtils {
     }
 
     public static Credentials loadCredentials(String password, String source)
-            throws IOException, CipherException {
+            throws IOException, CipherException, GeneralSecurityException {
         return loadCredentials(password, new File(source));
     }
 
     public static Credentials loadCredentials(String password, File source)
-            throws IOException, CipherException {
+            throws IOException, CipherException, GeneralSecurityException {
         WalletFile walletFile = objectMapper.readValue(source, WalletFile.class);
         return Credentials.create(Wallet.decrypt(password, walletFile));
     }
