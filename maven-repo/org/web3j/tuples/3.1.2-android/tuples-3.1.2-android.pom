@@ -22,8 +22,8 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:https://github.com/web3j/web3j.git</connection>
-    <url>https://github.com/web3j/web3j.git</url>
+    <connection>scm:git:https://github.com/TastyFan/web3j.git</connection>
+    <url>https://github.com/TastyFan/web3j.git</url>
   </scm>
   <dependencies>
     <dependency>

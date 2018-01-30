@@ -160,8 +160,8 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
                     url 'https://web3j.io'
 
                     scm {
-                        connection 'scm:git:https://github.com/web3j/web3j.git'
-                        url 'https://github.com/web3j/web3j.git'
+                        connection 'scm:git:https://github.com/TastyFan/web3j.git'
+                        url 'https://github.com/TastyFan/web3j.git'
                     }
 
                     licenses {
