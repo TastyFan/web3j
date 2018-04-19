@@ -1,6 +1,6 @@
+
 buildscript {
-    ext.lambdaworksVersion = '1.4.0'
-    ext.spongycastleVersion = '1.58.0.0'
+    ext.spongycastleVersion = '1.54.0.0'
     ext.jacksonVersion = '2.8.5'
     ext.javapoetVersion = '1.7.0'
     ext.jnr_unixsocketVersion = '0.15'
@@ -44,7 +44,7 @@ allprojects {
     targetCompatibility = 1.6
 
     group 'org.web3j'
-    version '3.1.2-android'
+    version '3.3.1-android'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
@@ -88,11 +88,11 @@ subprojects {
 
     dependencies {
         testCompile "junit:junit:$junitVersion",
-                "org.mockito:mockito-core:$mockitoVersion"
+                    "org.mockito:mockito-core:$mockitoVersion"
     }
 }
 
-configure(subprojects.findAll { it.name != 'integration-tests' }) {
+configure(subprojects.findAll {it.name != 'integration-tests'}) {
     // Required for Maven Nexus repository
     apply plugin: 'maven'
     apply plugin: 'signing'
@@ -146,7 +146,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                repository(url: "file:${rootDir}/maven-repo") {
+                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                     authentication(
                             userName: ossrhUsername,
                             password: ossrhPassword
@@ -160,8 +160,8 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
                     url 'https://web3j.io'
 
                     scm {
-                        connection 'scm:git:https://github.com/TastyFan/web3j.git'
-                        url 'https://github.com/TastyFan/web3j.git'
+                        connection 'scm:git:https://github.com/web3j/web3j.git'
+                        url 'https://github.com/web3j/web3j.git'
                     }
 
                     licenses {
@@ -184,8 +184,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     }
 
     signing {
-        required { gradle.taskGraph.hasTask('uploadArchives') }
-        // only execute as part of this task
+        required { gradle.taskGraph.hasTask('uploadArchives') }  // only execute as part of this task
         sign configurations.archives
     }
 
@@ -223,7 +222,7 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
     additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories = files(subprojects.sourceSets.main.output)
+    classDirectories =  files(subprojects.sourceSets.main.output)
     executionData = files(subprojects.jacocoTestReport.executionData)
     reports {
         xml.enabled = true

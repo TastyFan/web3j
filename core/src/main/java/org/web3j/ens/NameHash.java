@@ -14,6 +14,10 @@ public class NameHash {
 
     private static final byte[] EMPTY = new byte[32];
 
+    public static byte[] nameHashAsBytes(String ensName) {
+        return Numeric.hexStringToByteArray(nameHash(ensName));
+    }
+
     public static String nameHash(String ensName) {
         String normalisedEnsName = normalise(ensName);
         return Numeric.toHexString(nameHash(normalisedEnsName.split("\\.")));
@@ -53,6 +57,9 @@ public class NameHash {
             return IDN.toASCII(ensName, IDN.USE_STD3_ASCII_RULES)
                     .toLowerCase();
         } catch (IllegalArgumentException e) {
+            throw new EnsResolutionException("Invalid ENS name provided: " + ensName);
+        } catch (StringIndexOutOfBoundsException e) {
+            // http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8022758
             throw new EnsResolutionException("Invalid ENS name provided: " + ensName);
         }
     }

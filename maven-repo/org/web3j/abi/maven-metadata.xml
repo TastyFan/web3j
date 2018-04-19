@@ -3,10 +3,11 @@
   <groupId>org.web3j</groupId>
   <artifactId>abi</artifactId>
   <versioning>
-    <release>3.1.2-android</release>
+    <release>3.3.2-android</release>
     <versions>
       <version>3.1.2-android</version>
+      <version>3.3.2-android</version>
     </versions>
-    <lastUpdated>20180131061813</lastUpdated>
+    <lastUpdated>20180419123054</lastUpdated>
   </versioning>
 </metadata>
