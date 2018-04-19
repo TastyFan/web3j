@@ -134,6 +134,7 @@ public class Wallet {
 
     private static byte[] generateDerivedScryptKey(
             byte[] password, byte[] salt, int n, int r, int p, int dkLen) throws GeneralSecurityException {
+
         return SCrypt.scrypt(password, salt, n, r, p, dkLen);
     }
 
