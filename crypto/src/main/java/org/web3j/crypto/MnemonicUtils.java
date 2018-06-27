@@ -156,7 +156,7 @@ public class MnemonicUtils {
         }
     }
 
-    private static List<String> readAllLines(InputStream inputStream) throws IOException {
+    static List<String> readAllLines(InputStream inputStream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         List<String> data = new ArrayList<>();
         for (String line; (line = br.readLine()) != null; ) {

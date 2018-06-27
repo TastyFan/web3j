@@ -54,7 +54,9 @@ public class MnemonicUtilsTest {
 
     private static String readAllLinesWithDeliminator(
             String path, String delimiter) throws IOException {
-        return Strings.join(MnemonicUtils.readAllLines(path), delimiter);
+        InputStream inputStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream(path);
+        return Strings.join(MnemonicUtils.readAllLines(inputStream), delimiter);
     }
 
     /**
