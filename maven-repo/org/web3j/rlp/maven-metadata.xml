@@ -3,12 +3,13 @@
   <groupId>org.web3j</groupId>
   <artifactId>rlp</artifactId>
   <versioning>
-    <release>3.3.3-android</release>
+    <release>3.3.4-android</release>
     <versions>
       <version>3.1.2-android</version>
       <version>3.3.2-android</version>
       <version>3.3.3-android</version>
+      <version>3.3.4-android</version>
     </versions>
-    <lastUpdated>20180627065512</lastUpdated>
+    <lastUpdated>20180731122054</lastUpdated>
   </versioning>
 </metadata>
