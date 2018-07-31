@@ -32,9 +32,6 @@ public class MnemonicUtils {
     private static List<String> WORD_LIST = null;
 
     public static String generateMnemonic(byte[] initialEntropy) {
-        if (WORD_LIST == null) {
-            WORD_LIST = populateWordList();
-        }
         validateInitialEntropy(initialEntropy);
 
         int ent = initialEntropy.length * 8;
@@ -47,7 +44,7 @@ public class MnemonicUtils {
         StringBuilder mnemonicBuilder = new StringBuilder();
         for (int i = 0; i < iterations; i++) {
             int index = toInt(nextElevenBits(bits, i));
-            mnemonicBuilder.append(WORD_LIST.get(index));
+            mnemonicBuilder.append(getMnemonicList().get(index));
 
             boolean notLastIteration = i < iterations - 1;
             if (notLastIteration) {
@@ -56,6 +53,13 @@ public class MnemonicUtils {
         }
 
         return mnemonicBuilder.toString();
+    }
+
+    public static List<String> getMnemonicList() {
+        if (WORD_LIST == null) {
+            WORD_LIST = populateWordList();
+        }
+        return WORD_LIST;
     }
 
     public static byte[] generateSeed(String mnemonic, String passphrase) {

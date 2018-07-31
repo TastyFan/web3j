@@ -135,7 +135,10 @@ public class Wallet {
     private static byte[] generateDerivedScryptKey(
             byte[] password, byte[] salt, int n, int r, int p, int dkLen) throws GeneralSecurityException {
 
-        return SCrypt.scrypt(password, salt, n, r, p, dkLen);
+        if (n > N_LIGHT) {
+            return SCrypt.scrypt(password, salt, n, r, p, dkLen);
+        }
+        return org.spongycastle.crypto.generators.SCrypt.generate(password, salt, n, r, p, dkLen);
     }
 
     private static byte[] generateAes128CtrDerivedKey(
