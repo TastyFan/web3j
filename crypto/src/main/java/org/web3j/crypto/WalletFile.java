@@ -1,17 +1,5 @@
 package org.web3j.crypto;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
  * Ethereum wallet file.
  */
@@ -36,12 +24,11 @@ public class WalletFile {
         return crypto;
     }
 
-    @JsonSetter("crypto")
     public void setCrypto(Crypto crypto) {
         this.crypto = crypto;
     }
 
-    @JsonSetter("Crypto")  // older wallet files may have this attribute name
+    // older wallet files may have this attribute name
     public void setCryptoV1(Crypto crypto) {
         setCrypto(crypto);
     }
@@ -149,18 +136,6 @@ public class WalletFile {
             return kdfparams;
         }
 
-        @JsonTypeInfo(
-                use = JsonTypeInfo.Id.NAME,
-                include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
-                property = "kdf")
-        @JsonSubTypes({
-                @JsonSubTypes.Type(value = Aes128CtrKdfParams.class, name = Wallet.AES_128_CTR),
-                @JsonSubTypes.Type(value = ScryptKdfParams.class, name = Wallet.SCRYPT)
-        })
-        // To support my Ether Wallet keys uncomment this annotation & comment out the above
-        //  @JsonDeserialize(using = KdfParamsDeserialiser.class)
-        // Also add the following to the ObjectMapperFactory
-        // objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         public void setKdfparams(KdfParams kdfparams) {
             this.kdfparams = kdfparams;
         }
@@ -435,32 +410,6 @@ public class WalletFile {
             result = 31 * result + r;
             result = 31 * result + (getSalt() != null ? getSalt().hashCode() : 0);
             return result;
-        }
-    }
-
-    // If we need to work with MyEtherWallet we'll need to use this deserializer, see the
-    // following issue https://github.com/kvhnuke/etherwallet/issues/269
-    static class KdfParamsDeserialiser extends JsonDeserializer<KdfParams> {
-
-        @Override
-        public KdfParams deserialize(
-                JsonParser jsonParser, DeserializationContext deserializationContext)
-                throws IOException {
-
-            ObjectMapper objectMapper = (ObjectMapper) jsonParser.getCodec();
-            ObjectNode root = objectMapper.readTree(jsonParser);
-            KdfParams kdfParams;
-
-            // it would be preferable to detect the class to use based on the kdf parameter in the
-            // container object instance
-            JsonNode n = root.get("n");
-            if (n == null) {
-                kdfParams = objectMapper.convertValue(root, Aes128CtrKdfParams.class);
-            } else {
-                kdfParams = objectMapper.convertValue(root, ScryptKdfParams.class);
-            }
-
-            return kdfParams;
         }
     }
 }

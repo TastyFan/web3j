@@ -3,13 +3,10 @@
   <groupId>org.web3j</groupId>
   <artifactId>utils</artifactId>
   <versioning>
-    <release>3.3.4-android</release>
+    <release>3.3.5-primas</release>
     <versions>
-      <version>3.1.2-android</version>
-      <version>3.3.2-android</version>
-      <version>3.3.3-android</version>
-      <version>3.3.4-android</version>
+      <version>3.3.5-primas</version>
     </versions>
-    <lastUpdated>20180731122054</lastUpdated>
+    <lastUpdated>20180801045550</lastUpdated>
   </versioning>
 </metadata>

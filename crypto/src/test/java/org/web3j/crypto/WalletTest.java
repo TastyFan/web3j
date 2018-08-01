@@ -1,12 +1,9 @@
 package org.web3j.crypto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.google.gson.Gson;
 import org.junit.Test;
 import org.web3j.utils.Numeric;
-
 import java.io.IOException;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -62,8 +59,8 @@ public class WalletTest {
     }
 
     private WalletFile load(String source) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(source, WalletFile.class);
+        Gson gson = new Gson();
+        return gson.fromJson(source,WalletFile.class);
     }
 
     private static final String PASSWORD = "Insecure Pa55w0rd";

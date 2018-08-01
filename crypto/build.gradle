@@ -4,6 +4,6 @@ dependencies {
     compile project(':rlp'),
             project(':utils'),
             "com.lambdaworks:scrypt:$lambdaworksVersion",
-            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "com.google.code.gson:gson:$gsonVersion",
             "org.slf4j:slf4j-api:$slf4jVersion"
 }

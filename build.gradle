@@ -1,8 +1,7 @@
-
 buildscript {
     ext.lambdaworksVersion = '1.4.0'
     ext.spongycastleVersion = '1.54.0.0'
-    ext.jacksonVersion = '2.8.5'
+    ext.gsonVersion = '2.8.5'
     ext.javapoetVersion = '1.7.0'
     ext.jnr_unixsocketVersion = '0.15'
     ext.okhttpVersion = '3.8.1'
@@ -45,7 +44,7 @@ allprojects {
     targetCompatibility = 1.6
 
     group 'org.web3j'
-    version '3.3.4-android'
+    version '3.3.5-primas'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
@@ -89,11 +88,11 @@ subprojects {
 
     dependencies {
         testCompile "junit:junit:$junitVersion",
-                    "org.mockito:mockito-core:$mockitoVersion"
+                "org.mockito:mockito-core:$mockitoVersion"
     }
 }
 
-configure(subprojects.findAll {it.name != 'integration-tests'}) {
+configure(subprojects.findAll { it.name != 'integration-tests' }) {
     // Required for Maven Nexus repository
     apply plugin: 'maven'
     apply plugin: 'signing'
@@ -185,7 +184,8 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
     }
 
     signing {
-        required { gradle.taskGraph.hasTask('uploadArchives') }  // only execute as part of this task
+        required { gradle.taskGraph.hasTask('uploadArchives') }
+        // only execute as part of this task
         sign configurations.archives
     }
 
@@ -223,7 +223,7 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = subprojects.test
     additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories =  files(subprojects.sourceSets.main.output)
+    classDirectories = files(subprojects.sourceSets.main.output)
     executionData = files(subprojects.jacocoTestReport.executionData)
     reports {
         xml.enabled = true
