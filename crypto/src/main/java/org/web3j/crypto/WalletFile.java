@@ -1,5 +1,17 @@
 package org.web3j.crypto;
 
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.JsonAdapter;
+
+import java.lang.reflect.Type;
+
 /**
  * Ethereum wallet file.
  */
@@ -238,6 +250,7 @@ public class WalletFile {
 
     }
 
+    @JsonAdapter(KdfParamTypeAdapter.class)
     interface KdfParams {
         int getDklen();
 
@@ -410,6 +423,43 @@ public class WalletFile {
             result = 31 * result + r;
             result = 31 * result + (getSalt() != null ? getSalt().hashCode() : 0);
             return result;
+        }
+    }
+
+    // If we need to work with MyEtherWallet we'll need to use this deserializer, see the
+    // following issue https://github.com/kvhnuke/etherwallet/issues/269
+    static class KdfParamTypeAdapter implements JsonSerializer<KdfParams>, JsonDeserializer<KdfParams> {
+
+        @Override
+        public JsonElement serialize(KdfParams src, Type typeOfSrc, JsonSerializationContext context) {
+
+            JsonElement json;
+
+            if (src instanceof Aes128CtrKdfParams) {
+                json = context.serialize(src, Aes128CtrKdfParams.class);
+            } else if (src instanceof ScryptKdfParams) {
+                json = context.serialize(src, ScryptKdfParams.class);
+            } else {
+                json = context.serialize(src, typeOfSrc);
+            }
+            return json;
+        }
+
+        @Override
+        public KdfParams deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+
+            JsonObject jsonObject = json.getAsJsonObject();
+            KdfParams kdfParams;
+
+            JsonElement n = jsonObject.get("n");
+
+            if (n == null) {
+                kdfParams = context.deserialize(jsonObject, Aes128CtrKdfParams.class);
+            } else {
+                kdfParams = context.deserialize(jsonObject, ScryptKdfParams.class);
+            }
+
+            return kdfParams;
         }
     }
 }
