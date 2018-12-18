@@ -14,6 +14,10 @@ public class NameHash {
 
     private static final byte[] EMPTY = new byte[32];
 
+    public static byte[] nameHashAsBytes(String ensName) {
+        return Numeric.hexStringToByteArray(nameHash(ensName));
+    }
+
     public static String nameHash(String ensName) {
         String normalisedEnsName = normalise(ensName);
         return Numeric.toHexString(nameHash(normalisedEnsName.split("\\.")));
@@ -48,7 +52,7 @@ public class NameHash {
      * @return normalised ens name
      * @throws EnsResolutionException if the name cannot be normalised
      */
-    static String normalise(String ensName) {
+    public static String normalise(String ensName) {
         try {
             return IDN.toASCII(ensName, IDN.USE_STD3_ASCII_RULES)
                     .toLowerCase();

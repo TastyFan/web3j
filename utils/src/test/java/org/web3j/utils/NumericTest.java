@@ -32,6 +32,16 @@ public class NumericTest {
 
     private static final String HEX_RANGE_STRING = "0x0123456789abcdef";
 
+    @Test
+    public void testQuantityEncodeLeadingZero() {
+        assertThat(Numeric.toHexStringWithPrefixSafe(BigInteger.valueOf(0L)), equalTo("0x00"));
+        assertThat(Numeric.toHexStringWithPrefixSafe(BigInteger.valueOf(1024L)), equalTo("0x400"));
+        assertThat(Numeric.toHexStringWithPrefixSafe(BigInteger.valueOf(Long.MAX_VALUE)),
+                   equalTo("0x7fffffffffffffff"));
+        assertThat(Numeric.toHexStringWithPrefixSafe(
+                   new BigInteger("204516877000845695339750056077105398031")),
+                   equalTo("0x99dc848b94efc27edfad28def049810f"));
+    }
 
     @Test
     public void testQuantityDecode() {
@@ -214,5 +224,11 @@ public class NumericTest {
         assertFalse(Numeric.isIntegerValue(BigDecimal.valueOf(-0.1)));
         assertFalse(Numeric.isIntegerValue(BigDecimal.valueOf(1.1)));
         assertFalse(Numeric.isIntegerValue(BigDecimal.valueOf(-1.1)));
+    }
+
+    @Test
+    public void testHandleNPE() {
+        assertFalse(Numeric.containsHexPrefix(null));
+        assertFalse(Numeric.containsHexPrefix(""));
     }
 }

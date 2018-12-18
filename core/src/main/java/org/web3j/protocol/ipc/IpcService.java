@@ -16,27 +16,35 @@ public class IpcService extends Service {
 
     private static final Logger log = LoggerFactory.getLogger(IpcService.class);
 
-    private final IOFacade ioFacade;
-
-    public IpcService(IOFacade ioFacade, boolean includeRawResponses) {
+    public IpcService(boolean includeRawResponses) {
         super(includeRawResponses);
-        this.ioFacade = ioFacade;
     }
 
-    public IpcService(IOFacade ioFacade) {
-        this(ioFacade, false);
+    public IpcService() {
+        this(false);
+    }
+
+    protected IOFacade getIO() {
+        throw new UnsupportedOperationException("not implemented");
     }
 
     @Override
     protected InputStream performIO(String payload) throws IOException {
-        ioFacade.write(payload);
+        IOFacade io = getIO();
+        io.write(payload);
         log.debug(">> " + payload);
 
-        String result = ioFacade.read();
+        String result = io.read();
         log.debug("<< " + result);
+        io.close();
 
         // It's not ideal converting back into an inputStream, but we want
         // to be consistent with the HTTPService API.
-        return new ByteArrayInputStream(result.getBytes());
+        // UTF-8 (the default encoding for JSON) is explicitly used here.
+        return new ByteArrayInputStream(result.getBytes("UTF-8"));
+    }
+
+    @Override
+    public void close() throws IOException {
     }
 }

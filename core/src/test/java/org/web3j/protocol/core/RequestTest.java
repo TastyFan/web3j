@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import org.web3j.protocol.RequestTester;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.request.ShhFilter;
 import org.web3j.protocol.core.methods.request.ShhPost;
@@ -425,7 +423,7 @@ public class RequestTest extends RequestTester {
         web3j.ethUninstallFilter(Numeric.toBigInt("0xb")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"eth_uninstallFilter\","
-                + "\"params\":[\"0xb\"],\"id\":1}");
+                + "\"params\":[\"0x0b\"],\"id\":1}");
     }
 
     @Test
@@ -605,7 +603,7 @@ public class RequestTest extends RequestTester {
         web3j.shhUninstallFilter(Numeric.toBigInt("0x7")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"shh_uninstallFilter\","
-                + "\"params\":[\"0x7\"],\"id\":1}");
+                + "\"params\":[\"0x07\"],\"id\":1}");
     }
 
     @Test
@@ -613,7 +611,7 @@ public class RequestTest extends RequestTester {
         web3j.shhGetFilterChanges(Numeric.toBigInt("0x7")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"shh_getFilterChanges\","
-                + "\"params\":[\"0x7\"],\"id\":1}");
+                + "\"params\":[\"0x07\"],\"id\":1}");
     }
 
     @Test
@@ -621,7 +619,6 @@ public class RequestTest extends RequestTester {
         web3j.shhGetMessages(Numeric.toBigInt("0x7")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"shh_getMessages\","
-                + "\"params\":[\"0x7\"],\"id\":1}");
+                + "\"params\":[\"0x07\"],\"id\":1}");
     }
-
 }

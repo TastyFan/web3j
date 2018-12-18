@@ -77,7 +77,8 @@ public final class Numeric {
     }
 
     public static boolean containsHexPrefix(String input) {
-        return input.length() > 1 && input.charAt(0) == '0' && input.charAt(1) == 'x';
+        return !Strings.isEmpty(input) && input.length() > 1
+                && input.charAt(0) == '0' && input.charAt(1) == 'x';
     }
 
     public static BigInteger toBigInt(byte[] value, int offset, int length) {
@@ -111,6 +112,14 @@ public final class Numeric {
 
     public static String toHexStringWithPrefixZeroPadded(BigInteger value, int size) {
         return toHexStringZeroPadded(value, size, true);
+    }
+    
+    public static String toHexStringWithPrefixSafe(BigInteger value) {
+        String result = toHexStringNoPrefix(value);
+        if (result.length() < 2) {
+            result = Strings.zeros(1) + result;
+        }
+        return HEX_PREFIX + result;
     }
 
     public static String toHexStringNoPrefixZeroPadded(BigInteger value, int size) {

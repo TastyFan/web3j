@@ -19,8 +19,6 @@ import static org.junit.runners.Parameterized.Parameters;
 
 /**
  * Unit tests for {@link MnemonicUtils} utility class.
- *
- * @author Ali Dehghani
  */
 @RunWith(Parameterized.class)
 public class MnemonicUtilsTest {
@@ -89,5 +87,12 @@ public class MnemonicUtilsTest {
         byte[] actualSeed = MnemonicUtils.generateSeed(mnemonic, "TREZOR");
 
         assertArrayEquals(seed, actualSeed);
+    }
+
+    @Test
+    public void generateEntropyShouldGenerateExpectedEntropy() {
+        byte[] actualEntropy = MnemonicUtils.generateEntropy(mnemonic);
+
+        assertArrayEquals(initialEntropy, actualEntropy);
     }
 }

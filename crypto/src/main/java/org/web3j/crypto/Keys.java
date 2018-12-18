@@ -6,6 +6,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Arrays;
@@ -32,7 +33,9 @@ public class Keys {
     public static final int PRIVATE_KEY_LENGTH_IN_HEX = PRIVATE_KEY_SIZE << 1;
 
     static {
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
     }
 
     private Keys() { }
@@ -46,16 +49,30 @@ public class Keys {
      */
     static KeyPair createSecp256k1KeyPair() throws NoSuchProviderException,
             NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        return createSecp256k1KeyPair(secureRandom());
+    }
+
+    static KeyPair createSecp256k1KeyPair(SecureRandom random) throws NoSuchProviderException,
+            NoSuchAlgorithmException, InvalidAlgorithmParameterException {
 
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDSA", "BC");
         ECGenParameterSpec ecGenParameterSpec = new ECGenParameterSpec("secp256k1");
-        keyPairGenerator.initialize(ecGenParameterSpec, secureRandom());
+        if (random != null) {
+            keyPairGenerator.initialize(ecGenParameterSpec, random);
+        } else {
+            keyPairGenerator.initialize(ecGenParameterSpec);
+        }
         return keyPairGenerator.generateKeyPair();
     }
 
     public static ECKeyPair createEcKeyPair() throws InvalidAlgorithmParameterException,
             NoSuchAlgorithmException, NoSuchProviderException {
-        KeyPair keyPair = createSecp256k1KeyPair();
+        return createEcKeyPair(secureRandom());
+    }
+
+    public static ECKeyPair createEcKeyPair(SecureRandom random) throws
+            InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPair keyPair = createSecp256k1KeyPair(random);
         return ECKeyPair.create(keyPair);
     }
 
@@ -83,6 +100,32 @@ public class Keys {
     public static byte[] getAddress(byte[] publicKey) {
         byte[] hash = Hash.sha3(publicKey);
         return Arrays.copyOfRange(hash, hash.length - 20, hash.length);  // right most 160 bits
+    }
+
+    /**
+     * Checksum address encoding as per
+     * <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md">EIP-55</a>.
+     *
+     * @param address a valid hex encoded address
+     * @return hex encoded checksum address
+     */
+    public static String toChecksumAddress(String address) {
+        String lowercaseAddress = Numeric.cleanHexPrefix(address).toLowerCase();
+        String addressHash = Numeric.cleanHexPrefix(Hash.sha3String(lowercaseAddress));
+
+        StringBuilder result = new StringBuilder(lowercaseAddress.length() + 2);
+
+        result.append("0x");
+
+        for (int i = 0; i < lowercaseAddress.length(); i++) {
+            if (Integer.parseInt(String.valueOf(addressHash.charAt(i)), 16) >= 8) {
+                result.append(String.valueOf(lowercaseAddress.charAt(i)).toUpperCase());
+            } else {
+                result.append(lowercaseAddress.charAt(i));
+            }
+        }
+
+        return result.toString();
     }
 
     public static byte[] serialize(ECKeyPair ecKeyPair) {
