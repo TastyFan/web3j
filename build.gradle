@@ -1,7 +1,7 @@
 buildscript {
     ext.lambdaworksVersion = '1.4.0'
     ext.bouncycastleVersion = '1.54'
-    ext.jacksonVersion = '2.8.5'
+    ext.gsonVersion = '2.8.5'
     ext.javapoetVersion = '1.7.0'
     ext.jnr_unixsocketVersion = '0.21'
     ext.okhttpVersion = '3.12.0'
