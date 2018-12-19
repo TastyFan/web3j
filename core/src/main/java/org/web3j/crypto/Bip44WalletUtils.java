@@ -2,6 +2,7 @@ package org.web3j.crypto;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import static org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT;
 
@@ -15,9 +16,10 @@ public class Bip44WalletUtils extends WalletUtils {
      * @return A BIP-39 compatible Ethereum wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
+     * @throws GeneralSecurityException if the underlying cipher is not available
      */
     public static Bip39Wallet generateBip44Wallet(String password, File destinationDirectory)
-            throws CipherException, IOException {
+            throws CipherException, IOException, GeneralSecurityException {
         return generateBip44Wallet(password, destinationDirectory, false);
     }
 
@@ -30,10 +32,11 @@ public class Bip44WalletUtils extends WalletUtils {
      * @return A BIP-39 compatible Ethereum wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
+     * @throws GeneralSecurityException if the underlying cipher is not available
      */
     public static Bip39Wallet generateBip44Wallet(String password, File destinationDirectory,
                                                   boolean testNet)
-            throws CipherException, IOException {
+            throws CipherException, IOException, GeneralSecurityException {
         byte[] initialEntropy = new byte[16];
         SecureRandomUtils.secureRandom().nextBytes(initialEntropy);
 

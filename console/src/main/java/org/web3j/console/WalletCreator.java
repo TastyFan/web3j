@@ -2,6 +2,7 @@ package org.web3j.console;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -39,8 +40,7 @@ public class WalletCreator extends WalletManager {
             String walletFileName = WalletUtils.generateFullNewWalletFile(password, destination);
             console.printf("Wallet file " + walletFileName
                     + " successfully created in: " + destinationDir + "\n");
-        } catch (CipherException | IOException | InvalidAlgorithmParameterException
-                | NoSuchAlgorithmException | NoSuchProviderException e) {
+        } catch (CipherException | IOException | GeneralSecurityException e) {
             Console.exitError(e);
         }
     }

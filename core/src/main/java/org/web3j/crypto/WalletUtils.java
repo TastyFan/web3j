@@ -2,6 +2,7 @@ package org.web3j.crypto;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -34,29 +35,28 @@ public class WalletUtils {
     }
 
     public static String generateFullNewWalletFile(String password, File destinationDirectory)
-            throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CipherException, IOException {
+            throws GeneralSecurityException,
+            CipherException, IOException {
 
         return generateNewWalletFile(password, destinationDirectory, true);
     }
 
     public static String generateLightNewWalletFile(String password, File destinationDirectory)
-            throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException, CipherException, IOException {
+            throws GeneralSecurityException,
+            CipherException, IOException {
 
         return generateNewWalletFile(password, destinationDirectory, false);
     }
 
     public static String generateNewWalletFile(String password, File destinationDirectory)
-            throws CipherException, InvalidAlgorithmParameterException,
-            NoSuchAlgorithmException, NoSuchProviderException, IOException {
+            throws CipherException, GeneralSecurityException,
+            IOException {
         return generateFullNewWalletFile(password, destinationDirectory);
     }
 
     public static String generateNewWalletFile(
             String password, File destinationDirectory, boolean useFullScrypt)
-            throws CipherException, IOException, InvalidAlgorithmParameterException,
-            NoSuchAlgorithmException, NoSuchProviderException {
+            throws CipherException, IOException, GeneralSecurityException {
 
         ECKeyPair ecKeyPair = Keys.createEcKeyPair();
         return generateWalletFile(password, ecKeyPair, destinationDirectory, useFullScrypt);
@@ -64,7 +64,7 @@ public class WalletUtils {
 
     public static String generateWalletFile(
             String password, ECKeyPair ecKeyPair, File destinationDirectory, boolean useFullScrypt)
-            throws CipherException, IOException {
+            throws CipherException, IOException, GeneralSecurityException {
 
         WalletFile walletFile;
         if (useFullScrypt) {
@@ -93,9 +93,10 @@ public class WalletUtils {
      * @return A BIP-39 compatible Ethereum wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
+     * @throws GeneralSecurityException if the underlying cipher is not available
      */
     public static Bip39Wallet generateBip39Wallet(String password, File destinationDirectory)
-            throws CipherException, IOException {
+            throws CipherException, IOException, GeneralSecurityException {
         byte[] initialEntropy = new byte[16];
         secureRandom.nextBytes(initialEntropy);
 
@@ -109,12 +110,12 @@ public class WalletUtils {
     }
 
     public static Credentials loadCredentials(String password, String source)
-            throws IOException, CipherException {
+            throws IOException, CipherException, GeneralSecurityException {
         return loadCredentials(password, new File(source));
     }
 
     public static Credentials loadCredentials(String password, File source)
-            throws IOException, CipherException {
+            throws IOException, CipherException, GeneralSecurityException {
         WalletFile walletFile = objectMapper.readValue(source, WalletFile.class);
         return Credentials.create(Wallet.decrypt(password, walletFile));
     }
@@ -166,7 +167,7 @@ public class WalletUtils {
     public static String getMainnetKeyDirectory() {
         return String.format("%s%skeystore", getDefaultKeyDirectory(), File.separator);
     }
-    
+
     /**
      * Get keystore destination directory for a Rinkeby network.
      * @return a String containing destination directory

@@ -1,5 +1,6 @@
 package org.web3j.crypto;
 
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -63,7 +64,7 @@ public class Wallet {
     static final String SCRYPT = "scrypt";
 
     public static WalletFile create(String password, ECKeyPair ecKeyPair, int n, int p)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
 
         byte[] salt = generateRandomBytes(32);
 
@@ -85,12 +86,12 @@ public class Wallet {
     }
 
     public static WalletFile createStandard(String password, ECKeyPair ecKeyPair)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
         return create(password, ecKeyPair, N_STANDARD, P_STANDARD);
     }
 
     public static WalletFile createLight(String password, ECKeyPair ecKeyPair)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
         return create(password, ecKeyPair, N_LIGHT, P_LIGHT);
     }
 
@@ -127,7 +128,10 @@ public class Wallet {
     }
 
     private static byte[] generateDerivedScryptKey(
-            byte[] password, byte[] salt, int n, int r, int p, int dkLen) throws CipherException {
+            byte[] password, byte[] salt, int n, int r, int p, int dkLen) throws GeneralSecurityException {
+        if (n > N_LIGHT) {
+            return com.lambdaworks.crypto.SCrypt.scrypt(password, salt, n, r, p, dkLen);
+        }
         return SCrypt.generate(password, salt, n, r, p, dkLen);
     }
 
@@ -173,7 +177,7 @@ public class Wallet {
     }
 
     public static ECKeyPair decrypt(String password, WalletFile walletFile)
-            throws CipherException {
+            throws CipherException, GeneralSecurityException {
 
         validate(walletFile);
 

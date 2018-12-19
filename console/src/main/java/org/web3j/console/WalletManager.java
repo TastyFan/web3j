@@ -2,6 +2,7 @@ package org.web3j.console;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 import org.web3j.crypto.CipherException;
@@ -86,7 +87,7 @@ abstract class WalletManager {
             String currentPassword = new String(password);
             try {
                 return WalletUtils.loadCredentials(currentPassword, walletFile);
-            } catch (CipherException e) {
+            } catch (CipherException | GeneralSecurityException e) {
                 console.printf("Invalid password specified\n");
             } catch (IOException e) {
                 exitError("Unable to load wallet file: " + walletFile + "\n" + e.getMessage());

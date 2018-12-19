@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.web3j</groupId>
+  <artifactId>geth</artifactId>
+  <versioning>
+    <release>4.1.1-android</release>
+    <versions>
+      <version>4.1.1-android</version>
+    </versions>
+    <lastUpdated>20181219024305</lastUpdated>
+  </versioning>
+</metadata>

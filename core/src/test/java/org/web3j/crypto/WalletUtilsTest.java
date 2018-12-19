@@ -38,7 +38,7 @@ public class WalletUtilsTest {
 
     @After
     public void tearDown() throws Exception {
-        for (File file:tempDir.listFiles()) {
+        for (File file : tempDir.listFiles()) {
             file.delete();
         }
         tempDir.delete();
@@ -153,10 +153,10 @@ public class WalletUtilsTest {
                 .endsWith(String.format("%stestnet%skeystore", File.separator, File.separator)));
         assertTrue(WalletUtils.getRinkebyKeyDirectory()
                 .endsWith(String.format("%srinkeby%skeystore", File.separator, File.separator)));
-        
+
     }
- 
-    
+
+
     static File createTempDir() throws Exception {
         return Files.createTempDirectory(
                 WalletUtilsTest.class.getSimpleName() + "-testkeys").toFile();

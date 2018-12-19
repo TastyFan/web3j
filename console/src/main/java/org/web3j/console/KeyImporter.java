@@ -2,6 +2,7 @@ package org.web3j.console;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
@@ -76,7 +77,7 @@ public class KeyImporter extends WalletManager {
                     password, credentials.getEcKeyPair(), destination, true);
             console.printf("Wallet file " + walletFileName
                     + " successfully created in: " + destinationDir + "\n");
-        } catch (CipherException | IOException e) {
+        } catch (CipherException | IOException | GeneralSecurityException e) {
             exitError(e);
         }
     }

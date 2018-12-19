@@ -70,26 +70,26 @@ public class WalletFile {
         if (!(o instanceof WalletFile)) {
             return false;
         }
-        
+
         WalletFile that = (WalletFile) o;
-        
-        if (getAddress() != null 
+
+        if (getAddress() != null
                 ? !getAddress().equals(that.getAddress())
                 : that.getAddress() != null) {
             return false;
         }
-        if (getCrypto() != null 
+        if (getCrypto() != null
                 ? !getCrypto().equals(that.getCrypto())
                 : that.getCrypto() != null) {
             return false;
-        } 
-        if (getId() != null 
+        }
+        if (getId() != null
                 ? !getId().equals(that.getId())
                 : that.getId() != null) {
             return false;
         }
         return version == that.version;
-    } 
+    }
 
     @Override
     public int hashCode() {
@@ -98,7 +98,7 @@ public class WalletFile {
         result = 31 * result + (getId() != null ? getId().hashCode() : 0);
         result = 31 * result + version;
         return result;
-    }  
+    }
 
     public static class Crypto {
         private String cipher;
@@ -181,9 +181,9 @@ public class WalletFile {
             if (!(o instanceof Crypto)) {
                 return false;
             }
-            
+
             Crypto that = (Crypto) o;
-            
+
             if (getCipher() != null
                     ? !getCipher().equals(that.getCipher())
                     : that.getCipher() != null) {
@@ -211,7 +211,7 @@ public class WalletFile {
             }
             return getMac() != null
                     ? getMac().equals(that.getMac()) : that.getMac() == null;
-        }  
+        }
 
         @Override
         public int hashCode() {
@@ -223,7 +223,7 @@ public class WalletFile {
             result = 31 * result + (getMac() != null ? getMac().hashCode() : 0);
             return result;
         }
-        
+
     }
 
     public static class CipherParams {
@@ -248,19 +248,19 @@ public class WalletFile {
             if (!(o instanceof CipherParams)) {
                 return false;
             }
-            
+
             CipherParams that = (CipherParams) o;
-            
+
             return getIv() != null
                     ? getIv().equals(that.getIv()) : that.getIv() == null;
-        }  
+        }
 
         @Override
         public int hashCode() {
             int result = getIv() != null ? getIv().hashCode() : 0;
             return result;
-        }      
-        
+        }
+
     }
 
     interface KdfParams {
@@ -278,6 +278,7 @@ public class WalletFile {
         public Aes128CtrKdfParams() {
         }
 
+        @Override
         public int getDklen() {
             return dklen;
         }
@@ -302,6 +303,7 @@ public class WalletFile {
             this.prf = prf;
         }
 
+        @Override
         public String getSalt() {
             return salt;
         }
@@ -318,9 +320,9 @@ public class WalletFile {
             if (!(o instanceof Aes128CtrKdfParams)) {
                 return false;
             }
-            
+
             Aes128CtrKdfParams that = (Aes128CtrKdfParams) o;
-            
+
             if (dklen != that.dklen) {
                 return false;
             }
@@ -343,7 +345,7 @@ public class WalletFile {
             result = 31 * result + (getPrf() != null ? getPrf().hashCode() : 0);
             result = 31 * result + (getSalt() != null ? getSalt().hashCode() : 0);
             return result;
-        }        
+        }
     }
 
     public static class ScryptKdfParams implements KdfParams {
@@ -356,6 +358,7 @@ public class WalletFile {
         public ScryptKdfParams() {
         }
 
+        @Override
         public int getDklen() {
             return dklen;
         }
@@ -388,6 +391,7 @@ public class WalletFile {
             this.r = r;
         }
 
+        @Override
         public String getSalt() {
             return salt;
         }
@@ -404,9 +408,9 @@ public class WalletFile {
             if (!(o instanceof ScryptKdfParams)) {
                 return false;
             }
-            
+
             ScryptKdfParams that = (ScryptKdfParams) o;
-            
+
             if (dklen != that.dklen) {
                 return false;
             }
@@ -421,7 +425,7 @@ public class WalletFile {
             }
             return getSalt() != null
                 ? getSalt().equals(that.getSalt()) : that.getSalt() == null;
-        }  
+        }
 
         @Override
         public int hashCode() {
@@ -431,7 +435,7 @@ public class WalletFile {
             result = 31 * result + r;
             result = 31 * result + (getSalt() != null ? getSalt().hashCode() : 0);
             return result;
-        }     
+        }
     }
 
     // If we need to work with MyEtherWallet we'll need to use this deserializer, see the
